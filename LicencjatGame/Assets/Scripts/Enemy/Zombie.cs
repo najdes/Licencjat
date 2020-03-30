@@ -1,8 +1,8 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Zombie : MonoBehaviour
 {
+    public  bool isDead=false;
     public float health = 100f;
 
     public void TakeDamage(float amount)
@@ -16,6 +16,8 @@ public class Zombie : MonoBehaviour
 
     private void Die()
     {
-        Destroy(gameObject);
+        gameObject.GetComponent<Animator>().Play("Z_FallingForward");
+        isDead = true;
     }
+
 }
