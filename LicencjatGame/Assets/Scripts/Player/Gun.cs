@@ -34,10 +34,19 @@ public class Gun : MonoBehaviour
             Zombie zombie = hit.collider.transform.root.GetComponent<Zombie>();
             if (zombie != null)
             {
-                if (hit.collider.CompareTag("EnemyHead"))
+                if (hit.collider.CompareTag("EnemyHead")) 
+                {
                     zombie.TakeDamage(50f);
-                else if(hit.collider.CompareTag("Enemy"))
+                    zombie.Slow(2f);
+                }
+                    
+                else if (hit.collider.CompareTag("Enemy")) 
+                {
                     zombie.TakeDamage(damage);
+                    zombie.Slow(2f);
+                }
+                    
+                
             }
             if (hit.rigidbody != null)
                 hit.rigidbody.AddForce(-hit.normal * impactForce);
