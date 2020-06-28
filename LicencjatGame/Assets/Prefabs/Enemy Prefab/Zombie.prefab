@@ -2127,7 +2127,7 @@ Transform:
   m_GameObject: {fileID: 5348107606208412576}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -30.229534, y: 5.093831, z: -1.8045809}
-  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
   m_Children:
   - {fileID: 6814298089524424968}
   - {fileID: 8337168965946279152}
@@ -2195,7 +2195,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   destination: {fileID: 6307609983024642870, guid: 7f139bbd1937cb5409d19d236ef79159,
     type: 3}
-  zombie: {fileID: 0}
   targetTriggered: 0
 --- !u!195 &4114502932279847052
 NavMeshAgent:
@@ -2207,7 +2206,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 8.5
+  m_Speed: 6
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120

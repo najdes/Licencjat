@@ -5,9 +5,10 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public CharacterController controller;
-    public float speed = 12f;
-    public float gravity = 20f;
+    public float speed = 8f;
+    public float gravity = -20f;
     public float jumpHeight = 2.5f;
+    public float WaterHeight = 15.5f;
 
     public Transform groundCheck;
     public float groundDistance = 0.4f;
@@ -20,6 +21,8 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+
+        CheckForWaterHeight();
 
         if (isGrounded && velocity.y < 0)
         {
@@ -38,5 +41,19 @@ public class PlayerMovement : MonoBehaviour
 
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
+    }
+
+    void CheckForWaterHeight()
+    {
+        if (transform.position.y < WaterHeight)
+        {
+            gravity = 0f;
+            speed = 5f;
+        }
+        else
+        {
+            speed = 8f;
+            gravity = -9.8f;
+        }
     }
 }
