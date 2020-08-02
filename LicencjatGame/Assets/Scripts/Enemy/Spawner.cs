@@ -6,8 +6,9 @@ public class Spawner : MonoBehaviour
 {
     Animator animator;
     public GameObject zombie;
+    public float yPos;
     float xPos;
-    float yPos;
+    float zPos;
     int count;
     void Start()
     {
@@ -19,9 +20,9 @@ public class Spawner : MonoBehaviour
     {
         while (count < 10)
         {
-            xPos = Random.Range(-30, 50);
-            yPos = Random.Range(-30, 50);
-            Instantiate(zombie, new Vector3(xPos, 5, yPos), Quaternion.identity);
+            xPos = Random.Range(550, 560);
+            zPos = Random.Range(200, 246);
+            Instantiate(zombie, new Vector3(xPos, yPos, zPos), Quaternion.identity);
             yield return new WaitForSeconds(0.1f);
             count++;
         }

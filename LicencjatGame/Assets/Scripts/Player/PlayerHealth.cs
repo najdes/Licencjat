@@ -7,6 +7,10 @@ public class PlayerHealth : MonoBehaviour
     public float localPlayerHealth;
     public GameObject healthDisplay;
    
+    private void OnTriggerEnter(Collider other) {
+        playerHealth-= Zombie.zombieDmg;
+        Debug.Log("hittttttttttttttt");
+    }
     void Update()
     {
         localPlayerHealth = playerHealth;

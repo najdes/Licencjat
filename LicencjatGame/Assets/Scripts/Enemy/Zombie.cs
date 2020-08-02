@@ -6,6 +6,7 @@ public class Zombie : MonoBehaviour
     NavMeshAgent navMeshAgent;
     public  bool isDead=false;
     public float health = 100f;
+    public static float zombieDmg = 2.5f;
     float sec;
 
     public void TakeDamage(float amount)

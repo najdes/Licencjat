@@ -1,5 +1,24 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &6307609983954656996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6307609982487210185}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1488eff53b35013409116196aaae0950, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 10
+  range: 100
+  impactForce: 60
+  fireRate: 15
+  fpsCam: {fileID: 6307609983548621483}
+  bloodSplash: {fileID: 100000, guid: 32aafb358d61bd14b9b27ed0871fe43b, type: 3}
+  muzzleFlash: {fileID: 6307609983802383089}
 --- !u!1 &6307609982513858632
 GameObject:
   m_ObjectHideFlags: 0
@@ -41,6 +60,8 @@ GameObject:
   - component: {fileID: 6307609983024642856}
   - component: {fileID: 6307609983024642871}
   - component: {fileID: 6307609983024642857}
+  - component: {fileID: 3386895324580785617}
+  - component: {fileID: 4046583343073186062}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -62,7 +83,6 @@ Transform:
   - {fileID: 6307609983126020151}
   - {fileID: 6307609983548621484}
   - {fileID: 6307609982513858633}
-  - {fileID: 6307609983905523168}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -100,11 +120,40 @@ MonoBehaviour:
   speed: 10
   gravity: -12
   jumpHeight: 2
+  WaterHeight: 15.5
   groundCheck: {fileID: 6307609982513858633}
   groundDistance: 0.4
   groundMask:
     serializedVersion: 2
     m_Bits: 256
+--- !u!136 &3386895324580785617
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6307609983024642870}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.68
+  m_Height: 3.94
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &4046583343073186062
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6307609983024642870}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2712922a0c316654389014fb22b2dc41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localPlayerHealth: 0
+  healthDisplay: {fileID: 0}
 --- !u!1 &6307609983126020150
 GameObject:
   m_ObjectHideFlags: 0
@@ -283,70 +332,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mouseSensivity: 100
   playerBody: {fileID: 6307609983024642856}
---- !u!1 &6307609983905523183
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6307609983905523168}
-  - component: {fileID: 6307609983905523169}
-  m_Layer: 0
-  m_Name: HealthHolder
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6307609983905523168
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6307609983905523183}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 6307609983024642856}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6307609983905523169
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6307609983905523183}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2712922a0c316654389014fb22b2dc41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  localPlayerHealth: 0
-  healthDisplay: {fileID: 0}
---- !u!114 &6307609983954656996
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6307609982487210185}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1488eff53b35013409116196aaae0950, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damage: 10
-  range: 100
-  impactForce: 60
-  fireRate: 15
-  fpsCam: {fileID: 6307609983548621483}
-  bloodSplash: {fileID: 100000, guid: 32aafb358d61bd14b9b27ed0871fe43b, type: 3}
-  muzzleFlash: {fileID: 6307609983802383089}
 --- !u!1001 &6262883924159562628
 PrefabInstance:
   m_ObjectHideFlags: 0

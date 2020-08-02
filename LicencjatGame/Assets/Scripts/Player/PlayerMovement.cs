@@ -16,21 +16,23 @@ public class PlayerMovement : MonoBehaviour
 
 
     Vector3 velocity;
-    bool isGrounded;
-
+    public bool isGrounded;
+    float x;
+    float z;
     void Update()
     {
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
-
-        CheckForWaterHeight();
 
         if (isGrounded && velocity.y < 0)
         {
             velocity.y = -6f;
         }
-        float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
 
+        if(isGrounded){
+        x = Input.GetAxis("Horizontal");
+        z = Input.GetAxis("Vertical");
+        }
+    
         Vector3 move = transform.right * x + transform.forward*z;
         controller.Move(move * speed * Time.deltaTime);
 
@@ -43,17 +45,5 @@ public class PlayerMovement : MonoBehaviour
         controller.Move(velocity * Time.deltaTime);
     }
 
-    void CheckForWaterHeight()
-    {
-        if (transform.position.y < WaterHeight)
-        {
-            gravity = 0f;
-            speed = 5f;
-        }
-        else
-        {
-            speed = 8f;
-            gravity = -9.8f;
-        }
-    }
+   
 }

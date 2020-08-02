@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.AI;
 public class ZombieAnim : MonoBehaviour
 {
-
     public GameObject theZombie;
     public Zombie zombie;
     public bool isAttacking = false;
@@ -49,7 +48,7 @@ public class ZombieAnim : MonoBehaviour
     IEnumerator TakeHealth()
     {
         yield return new WaitForSeconds(0.9f);
-        PlayerHealth.playerHealth -= 5;
+        //PlayerHealth.playerHealth -= 5;
         isAttacking = false;
         theZombie.GetComponent<Animator>().SetBool("isAttacking", false);
         theZombie.GetComponent<Animator>().SetBool("isWalking", true);
