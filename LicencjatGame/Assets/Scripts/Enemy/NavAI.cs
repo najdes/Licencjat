@@ -31,8 +31,16 @@ public class NavAI : MonoBehaviour
             meshAgent.isStopped = false;
             meshAgent.SetDestination(destination.transform.position);
             targetTriggered = true;
-
-
+            if(!zombie.isDead&& Vector3.Distance(zombiePos, playerPos)>1f && Vector3.Distance(zombiePos, playerPos)<1.9f){
+                meshAgent.isStopped = true;
+                animator.SetBool("isAttacking",true);
+                animator.SetBool("isWalking",false);
+            }
+            else{
+                meshAgent.isStopped = false;
+                animator.SetBool("isAttacking",false);
+                animator.SetBool("isWalking",true);
+            }
         }
         else if (!zombie.isDead && Vector3.Distance(zombiePos, playerPos) > 40f && targetTriggered)
         {

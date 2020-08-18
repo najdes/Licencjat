@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public class Gun : MonoBehaviour
@@ -7,15 +8,30 @@ public class Gun : MonoBehaviour
     public float range = 100f;
     public float impactForce = 60f;
     public float fireRate = 15f;
+    public int magCapacity = 30;
+    public int currentAmmunition;
+    public float relaodTime = 0.1f; 
+    public int holdAmmunition = 90;
 
+    private Boolean isReloading = false;
     public Camera fpsCam;
     public GameObject bloodSplash;
     public ParticleSystem muzzleFlash;
 
     float nextTimeToFire = 0f;
-
+    private void Start() {
+        currentAmmunition  = magCapacity;
+    }
     void Update()
     {
+        if(isReloading)
+            return;
+        
+        if(currentAmmunition<=0){
+            StartCoroutine(Reload());
+            return;  
+        }
+
         if (Input.GetButton("Fire1") && Time.time >= nextTimeToFire)
         {
             nextTimeToFire = Time.time + 1f / fireRate;
@@ -29,6 +45,7 @@ public class Gun : MonoBehaviour
     {
         
         RaycastHit hit;
+        currentAmmunition--;
         if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit, range))
         {
             Zombie zombie = hit.collider.transform.root.GetComponent<Zombie>();
@@ -53,9 +70,14 @@ public class Gun : MonoBehaviour
 
             GameObject impactGO = Instantiate(bloodSplash, hit.point, Quaternion.LookRotation(hit.normal));
             Destroy(impactGO, .5f);
-
-            Debug.Log(hit.transform.name); 
         }
         
+    }
+    IEnumerator Reload(){
+        Debug.Log("reloading...");
+        isReloading = true;
+       yield return new WaitForSeconds(relaodTime);
+       currentAmmunition = magCapacity;
+       isReloading=false;
     }
 }

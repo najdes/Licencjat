@@ -282,7 +282,7 @@ GameObject:
   - component: {fileID: 8670062000504240388}
   m_Layer: 0
   m_Name: R_Arm_Collider
-  m_TagString: Untagged
+  m_TagString: PunchZone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -296,7 +296,7 @@ Transform:
   m_GameObject: {fileID: 350138850210715144}
   m_LocalRotation: {x: 0.46371835, y: 0.85710573, z: -0.1805516, w: -0.13317752}
   m_LocalPosition: {x: -0.38486937, y: -0.08329111, z: 0.049880035}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_Children: []
   m_Father: {fileID: 1771505483514765378}
   m_RootOrder: 5
@@ -603,7 +603,7 @@ GameObject:
   - component: {fileID: 8329847580459409949}
   m_Layer: 0
   m_Name: 'L_Arm_Collider '
-  m_TagString: Untagged
+  m_TagString: PunchZone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -617,7 +617,7 @@ Transform:
   m_GameObject: {fileID: 1212374236567358245}
   m_LocalRotation: {x: 0.1805533, y: -0.1331763, z: -0.46371943, w: 0.857105}
   m_LocalPosition: {x: -0.35720363, y: 0.024519486, z: -0.015409887}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_Children: []
   m_Father: {fileID: 5093336781925973850}
   m_RootOrder: 5

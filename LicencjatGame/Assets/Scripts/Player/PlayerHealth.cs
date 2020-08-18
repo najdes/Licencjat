@@ -3,13 +3,16 @@ using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
 {
-    public static float playerHealth = 100f;
+    public float playerHealth = 100f;
     public float localPlayerHealth;
     public GameObject healthDisplay;
    
     private void OnTriggerEnter(Collider other) {
-        playerHealth-= Zombie.zombieDmg;
-        Debug.Log("hittttttttttttttt");
+         
+        if(other.CompareTag("PunchZone")){
+            Zombie zombie = other.transform.root.GetComponent<Zombie>();
+            playerHealth -= zombie.zombieDmg;
+        }
     }
     void Update()
     {
