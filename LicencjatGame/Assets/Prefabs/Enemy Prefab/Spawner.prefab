@@ -38,14 +38,10 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8421711723669435980}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3195bb81edaceb04c93ed4dbaf0bd485, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   zombie: {fileID: 5348107606208412576, guid: d46b0e60d089fa94a89d5db18daf9187, type: 3}
   spawnNumber: 1
-  waypoints:
-  - {fileID: 4963501962104519679, guid: 1158f0e951c5c3d47996e7cb391e9fd6, type: 3}
-  - {fileID: 4963501962104519679, guid: 1158f0e951c5c3d47996e7cb391e9fd6, type: 3}
-  - {fileID: 4963501962104519679, guid: 1158f0e951c5c3d47996e7cb391e9fd6, type: 3}
