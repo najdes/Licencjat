@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class DeadEvent : MonoBehaviour
 {
-    public GameObject player;
+    GameObject player;
     float playerHealth;
     private void Start() {
         player  = GameObject.Find("Player");
