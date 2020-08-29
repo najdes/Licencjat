@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Gun : MonoBehaviour
 {
@@ -16,6 +17,10 @@ public class Gun : MonoBehaviour
     private Boolean isReloading = false;
     public Camera fpsCam;
     public GameObject bloodSplash;
+    public GameObject currAmmo;
+    public GameObject magAmmo;
+    public GameObject holdAmmo;
+    public Animator animator;
     public ParticleSystem muzzleFlash;
 
     float nextTimeToFire = 0f;
@@ -24,15 +29,16 @@ public class Gun : MonoBehaviour
     }
     void Update()
     {
-        if(isReloading)
+        showAmmo();
+        if (isReloading)
             return;
-        
-        if(currentAmmunition<=0){
+
+        if ((currentAmmunition <= 0 || Input.GetKeyDown("r")) && holdAmmunition>0){
             StartCoroutine(Reload());
             return;  
         }
 
-        if (Input.GetButton("Fire1") && Time.time >= nextTimeToFire)
+        if (Input.GetButton("Fire1") && Time.time >= nextTimeToFire && holdAmmunition>0)
         {
             nextTimeToFire = Time.time + 1f / fireRate;
             muzzleFlash.Play();
@@ -42,8 +48,7 @@ public class Gun : MonoBehaviour
     }
 
     private void Shoot()
-    {
-        
+    { 
         RaycastHit hit;
         currentAmmunition--;
         if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit, range))
@@ -74,10 +79,35 @@ public class Gun : MonoBehaviour
         
     }
     IEnumerator Reload(){
-        Debug.Log("reloading...");
+        animator.SetBool("isReloading", true);
         isReloading = true;
-       yield return new WaitForSeconds(relaodTime);
-       currentAmmunition = magCapacity;
-       isReloading=false;
+        yield return new WaitForSeconds(relaodTime - .25f);
+        animator.SetBool("isReloading", false);
+        yield return new WaitForSeconds(.25f);
+
+        if (currentAmmunition > 0)
+        {
+            holdAmmunition -= (magCapacity - currentAmmunition);
+        }
+        else
+        {
+            holdAmmunition -= magCapacity;
+        }
+        if (holdAmmunition >= magCapacity)
+        {
+            currentAmmunition = magCapacity;
+        }
+        else
+        {
+            currentAmmunition = holdAmmunition;
+        }
+            isReloading =false;
+    }
+    void showAmmo()
+    {
+        currAmmo.GetComponent<Text>().text = currentAmmunition.ToString();
+        magAmmo.GetComponent<Text>().text = magCapacity.ToString();
+        holdAmmo.GetComponent<Text>().text = holdAmmunition.ToString();
+
     }
 }

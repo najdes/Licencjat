@@ -22,7 +22,7 @@ public class NavAI : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         meshAgent = GetComponent<NavMeshAgent>();
-        destination = GameObject.Find("Player");
+        destination = GameObject.Find("PlayerModel");
         zombie = GetComponent<Zombie>();
         count = 0;
         speed = meshAgent.speed;
