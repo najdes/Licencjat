@@ -8,7 +8,7 @@ public class DeadEvent : MonoBehaviour
     GameObject player;
     float playerHealth;
     private void Start() {
-        player  = GameObject.Find("PlayerModel");
+        player  = GameObject.Find("Player");
         playerHealth = player.GetComponent<PlayerHealth>().playerHealth;
     }
     // Update is called once per frame

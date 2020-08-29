@@ -17,14 +17,8 @@ public class PlayerMovement : MonoBehaviour
 
     Vector3 velocity;
     public bool isGrounded;
-    Animator animator;
     float x;
     float z;
-
-    private void Start()
-    {
-        animator = GetComponent<Animator>();
-    }
     void Update()
     {
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
@@ -38,10 +32,7 @@ public class PlayerMovement : MonoBehaviour
         x = Input.GetAxis("Horizontal");
         z = Input.GetAxis("Vertical");
         }
-
-        if (x == 0 && z == 0)
-            animator.SetBool("isIdle", true);
-
+    
         Vector3 move = transform.right * x + transform.forward*z;
         controller.Move(move * speed * Time.deltaTime);
 
@@ -52,8 +43,6 @@ public class PlayerMovement : MonoBehaviour
 
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
-        animator.SetBool("isIdle", false);
-        animator.SetBool("isWalking", true);
     }
 
    
