@@ -15,7 +15,7 @@ public class PlayerMovement : MonoBehaviour
     public LayerMask groundMask;
 
 
-    Vector3 velocity;
+    public Vector3 velocity;
     public bool isGrounded;
     Animator animator;
     float x;
@@ -31,7 +31,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (isGrounded && velocity.y < 0)
         {
-            velocity.y = -6f;
+            velocity.y = -2f;
         }
 
         if(isGrounded){
@@ -54,7 +54,7 @@ public class PlayerMovement : MonoBehaviour
             velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
         }
 
-        if (Input.GetKey("left shift") && isGrounded)
+        if (Input.GetKey("left shift"))
         {
             speed = 8f;
             animator.SetBool("isWalking", false);
