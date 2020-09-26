@@ -60,7 +60,7 @@ public class NavAI : MonoBehaviour
             }
             
             meshAgent.SetDestination(wpTab[currentWp]);
-            Debug.Log(currentWp);
+            //Debug.Log(currentWp);
         }
         else if (!zombie.isDead && Vector3.Distance(zombiePos, playerPos) <= 20f)
         {

@@ -9,15 +9,15 @@ public class DeadEvent : MonoBehaviour
     float playerHealth;
     private void Start() {
         player  = GameObject.Find("PlayerModel");
-        playerHealth = player.GetComponent<PlayerHealth>().playerHealth;
+        playerHealth = player.GetComponent<PlayerHealth>().PlayerHp;
     }
     // Update is called once per frame
     void Update()
     {
-        playerHealth = player.GetComponent<PlayerHealth>().playerHealth;
+        playerHealth = player.GetComponent<PlayerHealth>().PlayerHp;
         if(playerHealth<=0f){           
             Scene scene = SceneManager.GetActiveScene();
-            player.GetComponent<PlayerHealth>().playerHealth=100f;
+            player.GetComponent<PlayerHealth>().PlayerHp = 100f;
             SceneManager.LoadScene(scene.name);
         }
     }
