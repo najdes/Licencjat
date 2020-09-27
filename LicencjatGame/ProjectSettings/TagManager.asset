@@ -9,6 +9,7 @@ TagManager:
   - PunchZone
   - Waypoint
   - Medkit
+  - Ammobag
   layers:
   - Default
   - TransparentFX

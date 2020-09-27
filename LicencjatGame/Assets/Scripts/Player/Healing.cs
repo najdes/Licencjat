@@ -11,15 +11,23 @@ public class Healing : MonoBehaviour
     private float healStartTime;
     public PlayerHealth playerHp;
     public Slider slider;
+    private GameObject sliderGo;
     public bool HealInProgress { get; set; }
+
+    private void Awake()
+    {
+        sliderGo = slider.transform.gameObject;
+        sliderGo.SetActive(false);
+    }
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButtonDown("Heal"))
+        if (Input.GetButtonDown("Heal") && playerHp.PlayerHp<100f)
         {
             if (!HealInProgress) 
             {
-            StartCoroutine(Heal());
+                sliderGo.SetActive(true);
+                StartCoroutine(Heal());
             }
         }
         if (healRequest)
@@ -27,6 +35,7 @@ public class Healing : MonoBehaviour
             progressSlider();
             if (Input.GetButtonUp("Heal"))
             {
+                sliderGo.SetActive(false);
                 HealFail();
             }
         }
@@ -43,6 +52,8 @@ public class Healing : MonoBehaviour
                 playerHp.PlayerHp += 30f;
             else
                 playerHp.PlayerHp = playerHp.PlayerHp + (100f - playerHp.PlayerHp);
+            print("Cast was suucces");
+            sliderGo.SetActive(false);
         }
         slider.value = 0;
         HealInProgress = false;
