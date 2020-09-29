@@ -2,14 +2,14 @@
 
 public class GunSwitch : MonoBehaviour
 {
+    
     public int selectedWeapon = 0;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public static int rifleAmmo = 360;
+    public static int shotgunAmmo = 64;
+    public static int currentRifleAmmo=0;
+    public static int currentShotgunAmmo=0;
 
-    // Update is called once per frame
+    
     void Update()
     {
         int previous = selectedWeapon;
@@ -36,7 +36,7 @@ public class GunSwitch : MonoBehaviour
         int i = 0;
         foreach(Transform weapon in transform)
         {
-            if (i == selectedWeapon)
+            if (i == selectedWeapon && weapon.GetComponentInChildren<Gun>().IsEnable)
                 weapon.gameObject.SetActive(true);
             else
                 weapon.gameObject.SetActive(false);

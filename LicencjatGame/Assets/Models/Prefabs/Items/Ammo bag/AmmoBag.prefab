@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5027271754756756403}
   - component: {fileID: 8244875490250103830}
   - component: {fileID: 6165245211350821084}
+  - component: {fileID: 726365112947964444}
   m_Layer: 0
   m_Name: AmmoBag
   m_TagString: Ammobag
@@ -81,3 +82,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &726365112947964444
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5660925409967065353}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.6365274, y: 0.30032036, z: 0.5074229}
+  m_Center: {x: 0, y: 0, z: 0}

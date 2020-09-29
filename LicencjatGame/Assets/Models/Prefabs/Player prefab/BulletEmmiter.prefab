@@ -53,13 +53,13 @@ MonoBehaviour:
   relaodTime: 1
   headMulti: 2
   maxAmmo: 90
-  isEnable: 1
   fpsCam: {fileID: 0}
   bloodSplash: {fileID: 100000, guid: 32aafb358d61bd14b9b27ed0871fe43b, type: 3}
-  currAmmo: {fileID: 0}
+  currAmmo: {fileID: 332663703050966486, guid: 3731f12d977a7b446a7c6ac924d38a7b, type: 3}
   bulletGO: {fileID: 5145858758366273499, guid: 1ca2c553d3b1f484ea92f7cbf9e71f7c,
     type: 3}
-  magAmmo: {fileID: 0}
-  holdAmmo: {fileID: 0}
+  magAmmo: {fileID: 3009949309274945498, guid: 8a7b62bd0975110459cda40ecaf4afd4, type: 3}
+  holdAmmo: {fileID: 7543558053859897505, guid: 7aab065d137e1f34b8cee716924c750f,
+    type: 3}
   animator: {fileID: 0}
   muzzleFlash: {fileID: 0}
