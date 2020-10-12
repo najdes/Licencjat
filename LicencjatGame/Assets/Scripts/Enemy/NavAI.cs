@@ -1,20 +1,26 @@
-﻿using UnityEngine;
+﻿using UnityEditor.Animations.Rigging;
+using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Animations.Rigging;
 using UnityEngine.Rendering;
 
 public class NavAI : MonoBehaviour
 {
     public GameObject destination;
+    public GameObject aimTarget;
+    public bool targetTriggered = false;
+
+    Rig rig;
     NavMeshAgent meshAgent;
+    Transform playerTarget;
     private Zombie zombie;
     Animator animator;
-    bool isPatroling=true;
+    bool isChasing=false;
+    //bool isPatroling = true;
     Vector3[] wpTab = new Vector3[3];
     int currentWp = 0;
     int count;
-    float speed;
-
-    public bool targetTriggered = false;
+    float speed;    
 
     Vector3 zombiePos;
     Vector3 playerPos;
@@ -25,6 +31,10 @@ public class NavAI : MonoBehaviour
         destination = GameObject.Find("PlayerModel");
         zombie = GetComponent<Zombie>();
         count = 0;
+        rig = GetComponentInChildren<Rig>();
+        rig.weight = 0f;
+        playerTarget = destination.transform.Find("ConstraintTarget");
+        
         speed = meshAgent.speed;
         Transform trans = transform;
         foreach (Transform t in trans)
@@ -35,62 +45,71 @@ public class NavAI : MonoBehaviour
                 count++;
             }
         }
-        //foreach (Vector3 i in zombie.GetWpTab())
-        // Debug.Log(i);
     }
 
 
     void Update()
     {
-        //Array.Copy(zombie.GetWpTab(), wpTab, 3);
+        aimTarget.transform.position = playerTarget.position;
         zombiePos = meshAgent.transform.position;
         playerPos = destination.transform.position;
-        if (!zombie.isDead && Vector3.Distance(zombiePos, playerPos) > 20f)
+        //Vector3 targetdistance = aimTarget.transform.position - zombiePos;
+        //Debug.Log(Vector3.Angle(targetdistance, transform.forward));
+        Vector3 distance = playerPos - zombiePos;
+        float angle = Vector3.Angle(distance, transform.forward);
+        if (!zombie.isDead && distance.magnitude > 20f)
         {
+            rig.weight = 0f;
             meshAgent.speed = 0.4f;
             animator.SetBool("isPatroling", true);
             animator.SetBool("isWalking", false);
             meshAgent.isStopped = false;
             if (Vector3.Distance(wpTab[currentWp], zombiePos) < 4.0f)
             {
-                
+
                 currentWp++;
                 if (currentWp >= wpTab.Length)
                     currentWp = 0;
+
             }
-            
+
             meshAgent.SetDestination(wpTab[currentWp]);
-            //Debug.Log(currentWp);
+
         }
-        else if (!zombie.isDead && Vector3.Distance(zombiePos, playerPos) <= 20f)
+        else if ((!zombie.isDead && distance.magnitude <= 20f && angle < 30) || isChasing && !zombie.isDead)
         {
+            if (angle > 70)
+                rig.weight = (1f / angle) * 40f;
+            else
+                rig.weight = 1f;
+            isChasing = true;
+            if (distance.magnitude > 20f)
+                isChasing = false;
             meshAgent.speed = speed;
             animator.SetBool("isWalking", true);
             animator.SetBool("isPatroling", false);
             meshAgent.isStopped = false;
             meshAgent.SetDestination(destination.transform.position);
             targetTriggered = true;
-            if (!zombie.isDead && Vector3.Distance(zombiePos, playerPos) > 1f && Vector3.Distance(zombiePos, playerPos) < 1.9f) {
+            if (!zombie.isDead && distance.magnitude <= 2f)
+            {
                 meshAgent.isStopped = true;
                 animator.SetBool("isAttacking", true);
                 animator.SetBool("isWalking", false);
             }
-            else {
+            else
+            {
                 meshAgent.isStopped = false;
                 animator.SetBool("isAttacking", false);
                 animator.SetBool("isWalking", true);
             }
-            isPatroling = false;
         }
-       /* else if (!zombie.isDead && Vector3.Distance(zombiePos, playerPos) > 20f)
+        else 
         {
-            meshAgent.isStopped = false;
-            animator.SetBool("isWalking", true);
-            animator.SetBool("isIdle", false);
-            meshAgent.SetDestination(destination.transform.position);
-        }*/
-        else
             meshAgent.isStopped = true;
+            rig.weight = 0f;
+        }
+            
     }
     
 }

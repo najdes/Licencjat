@@ -28,12 +28,10 @@ public class ItemPickUp : MonoBehaviour
         {
             if(Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out target, range))
             {
-                Debug.Log("Ziemia + tag: "+target.transform.tag);
                 foreach(Transform weapon in weaponHolder.transform)
                 {
                     if (target.collider.CompareTag(weapon.tag))
                     {
-                        Debug.Log("moja + tag: " +weapon.tag);
                         weapon.GetComponentInChildren<Gun>().IsEnable = true;
                         Destroy(target.transform.gameObject);
                     }

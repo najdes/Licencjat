@@ -14,6 +14,7 @@ public class Gun : MonoBehaviour
     public int currentAmmunition;
     public float relaodTime = 0.1f;
     public float headMulti = 2f;
+    public float range = 2f;
     public int HoldAmmo { set; get; }
     public bool IsEnable { set; get; } = false;
     public bool isReloading = false;
@@ -31,19 +32,19 @@ public class Gun : MonoBehaviour
     private void Start() {
         if (transform.parent.CompareTag("Pistol"))
             IsEnable = true;
+        
         currentAmmunition = magCapacity;
 
         AmmoUptade();
     }
     void Update()
     {
-        ShowAmmo();
-        
+        //ShowAmmo();
         if (isReloading)
             return;
         if (transform.parent.CompareTag("Ak") || transform.parent.CompareTag("M4"))
         {
-            if ((currentAmmunition <= 0 || Input.GetKeyDown("r")) && GunSwitch.currentRifleAmmo > 0)
+            if ((currentAmmunition <= 0 || Input.GetKeyDown("r")) && GunSwitch.currentRifleAmmo > 0 && currentAmmunition<magCapacity)
             {
                 StartCoroutine(Reload());
                 return;
@@ -51,13 +52,13 @@ public class Gun : MonoBehaviour
         }
         else if (transform.parent.CompareTag("Shotgun"))
         {
-            if ((currentAmmunition <= 0 || Input.GetKeyDown("r")) && GunSwitch.currentShotgunAmmo > 0)
+            if ((currentAmmunition <= 0 || Input.GetKeyDown("r")) && GunSwitch.currentShotgunAmmo > 0 &&currentAmmunition < magCapacity)
             {
                 StartCoroutine(Reload());
                 return;
             }
         }
-        else if (transform.parent.CompareTag("Pistol"))
+        else if (transform.parent.CompareTag("Pistol") && currentAmmunition < magCapacity)
         {
             if ((currentAmmunition <= 0 || Input.GetKeyDown("r")))
             {
@@ -111,56 +112,65 @@ public class Gun : MonoBehaviour
         yield return new WaitForSeconds(.25f);
         if (!transform.parent.CompareTag("Pistol"))
         {
-            if (transform.parent.CompareTag("Ak")|| transform.parent.CompareTag("M4"))
+            if (transform.parent.CompareTag("Ak") || transform.parent.CompareTag("M4"))
             {
-                if (currentAmmunition > 0)
+                int _magAmmo = currentAmmunition;
+                int _holdAmmo = GunSwitch.currentRifleAmmo;
+
+                if (_magAmmo > 0)
                 {
-                    GunSwitch.currentRifleAmmo -= (magCapacity - currentAmmunition);
+                    _holdAmmo -= (magCapacity - _magAmmo);
+
                 }
                 else
                 {
-                    GunSwitch.currentRifleAmmo -= magCapacity;
+                    _holdAmmo -= magCapacity;
                 }
-                if (GunSwitch.currentRifleAmmo>= magCapacity)
+
+                if (GunSwitch.currentRifleAmmo >= magCapacity)
                 {
-                    currentAmmunition = magCapacity;
+                    _magAmmo = magCapacity;
                 }
                 else
                 {
-                    currentAmmunition = GunSwitch.currentRifleAmmo;
+                    _magAmmo = GunSwitch.currentRifleAmmo;
                 }
+                if (_holdAmmo >= 0)
+                    GunSwitch.currentRifleAmmo = _holdAmmo;
+                else
+                    GunSwitch.currentRifleAmmo = 0;
+                currentAmmunition = _magAmmo;
             }
             else if(transform.parent.CompareTag("Shotgun"))
             {
-                if (currentAmmunition > 0)
+                int _magAmmo = currentAmmunition;
+                int _holdAmmo = GunSwitch.currentShotgunAmmo;
+
+                if(_magAmmo > 0)
                 {
-                    GunSwitch.currentShotgunAmmo -= (magCapacity - currentAmmunition);
+                    _holdAmmo -= (magCapacity - _magAmmo);
+
                 }
                 else
                 {
-                    GunSwitch.currentShotgunAmmo -= magCapacity;
+                    _holdAmmo -= magCapacity;
                 }
+
                 if (GunSwitch.currentShotgunAmmo >= magCapacity)
                 {
-                    currentAmmunition = magCapacity;
+                    _magAmmo = magCapacity;
                 }
                 else
                 {
-                    int tempMag = currentAmmunition;
-                    int tempHold = GunSwitch.currentShotgunAmmo;
-                    if (currentAmmunition + tempHold > magCapacity)
-                    {
-
-                        GunSwitch.currentShotgunAmmo = GunSwitch.currentShotgunAmmo - (magCapacity - tempMag);
-                        currentAmmunition = magCapacity;
-                    }
-                    else
-                    {
-                        currentAmmunition += tempHold;
-                        GunSwitch.currentShotgunAmmo -= tempHold;
-                    }
+                    _magAmmo = GunSwitch.currentShotgunAmmo;
                 }
+                if (_holdAmmo >= 0)
+                    GunSwitch.currentShotgunAmmo = _holdAmmo;
+                else
+                    GunSwitch.currentShotgunAmmo = 0;
+                currentAmmunition = _magAmmo;
             }
+           
             isReloading = false;
         }
         else
@@ -189,10 +199,11 @@ public class Gun : MonoBehaviour
         Rigidbody bulletRigidBody = bullet.GetComponent<Rigidbody>();
         BulletScript bulletScript = bullet.GetComponent<BulletScript>();
 
-        bulletScript.setValues(singleDmg, life, headMulti);
+        bulletScript.setValues(singleDmg, life, headMulti,range);
         bullet.transform.position = transform.position;
-        float angle = Vector3.Angle(fpsCam.transform.position, shootLine);
-        bullet.transform.rotation = Quaternion.AngleAxis(angle, Vector3.right);
+        float angle = Vector3.Angle(transform.position, shootLine);
+        Debug.Log(angle);
+        bullet.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
         Vector3 rotatedShot = Quaternion.Euler(x, y, z) * shootLine;
         bulletRigidBody.velocity = rotatedShot * bulletSpeed;
     }
