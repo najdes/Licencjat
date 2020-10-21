@@ -1,5 +1,4 @@
-﻿using UnityEditor.Animations.Rigging;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.Rendering;
@@ -16,10 +15,7 @@ public class NavAI : MonoBehaviour
     private Zombie zombie;
     Animator animator;
     bool isChasing=false;
-    //bool isPatroling = true;
-    Vector3[] wpTab = new Vector3[3];
-    int currentWp = 0;
-    int count;
+    public bool isTriggered = false;
     float speed;    
 
     Vector3 zombiePos;
@@ -30,21 +26,10 @@ public class NavAI : MonoBehaviour
         meshAgent = GetComponent<NavMeshAgent>();
         destination = GameObject.Find("PlayerModel");
         zombie = GetComponent<Zombie>();
-        count = 0;
         rig = GetComponentInChildren<Rig>();
         rig.weight = 0f;
-        playerTarget = destination.transform.Find("ConstraintTarget");
-        
+        playerTarget = destination.transform.Find("ConstraintTarget");   
         speed = meshAgent.speed;
-        Transform trans = transform;
-        foreach (Transform t in trans)
-        {
-            if (t.tag == "Waypoint")
-            {
-                wpTab[count] = t.position;
-                count++;
-            }
-        }
     }
 
 
@@ -53,45 +38,37 @@ public class NavAI : MonoBehaviour
         aimTarget.transform.position = playerTarget.position;
         zombiePos = meshAgent.transform.position;
         playerPos = destination.transform.position;
-        //Vector3 targetdistance = aimTarget.transform.position - zombiePos;
-        //Debug.Log(Vector3.Angle(targetdistance, transform.forward));
         Vector3 distance = playerPos - zombiePos;
         float angle = Vector3.Angle(distance, transform.forward);
-        if (!zombie.isDead && distance.magnitude > 20f)
+
+        if (zombie.health < 100f)
+            isTriggered = true;
+
+        if (!zombie.isDead && distance.magnitude > 20f && !isTriggered)
         {
             rig.weight = 0f;
             meshAgent.speed = 0.4f;
-            animator.SetBool("isPatroling", true);
+            animator.SetBool("isPatroling", false);
+            animator.SetBool("isIdle",true);
             animator.SetBool("isWalking", false);
             meshAgent.isStopped = false;
-            if (Vector3.Distance(wpTab[currentWp], zombiePos) < 4.0f)
-            {
-
-                currentWp++;
-                if (currentWp >= wpTab.Length)
-                    currentWp = 0;
-
-            }
-
-            meshAgent.SetDestination(wpTab[currentWp]);
-
+           
         }
-        else if ((!zombie.isDead && distance.magnitude <= 20f && angle < 30) || isChasing && !zombie.isDead)
+        else if ((!zombie.isDead && distance.magnitude <= 20f && angle < 40) || (isChasing && !zombie.isDead) || (isTriggered && !zombie.isDead))
         {
+            meshAgent.SetDestination(destination.transform.position);
             if (angle > 70)
                 rig.weight = (1f / angle) * 40f;
             else
                 rig.weight = 1f;
             isChasing = true;
-            if (distance.magnitude > 20f)
-                isChasing = false;
             meshAgent.speed = speed;
             animator.SetBool("isWalking", true);
+            animator.SetBool("isIdle", false);
             animator.SetBool("isPatroling", false);
             meshAgent.isStopped = false;
-            meshAgent.SetDestination(destination.transform.position);
             targetTriggered = true;
-            if (!zombie.isDead && distance.magnitude <= 2f)
+            if (!zombie.isDead && distance.magnitude <= 1.5f)
             {
                 meshAgent.isStopped = true;
                 animator.SetBool("isAttacking", true);
@@ -109,7 +86,7 @@ public class NavAI : MonoBehaviour
             meshAgent.isStopped = true;
             rig.weight = 0f;
         }
-            
+
     }
     
 }

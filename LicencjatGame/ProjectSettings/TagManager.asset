@@ -14,6 +14,12 @@ TagManager:
   - Ak
   - M4
   - Shotgun
+  - Blocker
+  - Titan
+  - TitanHead
+  - TitanArmor
+  - TitanPunch
+  - TitanSlam
   layers:
   - Default
   - TransparentFX
@@ -24,8 +30,8 @@ TagManager:
   - 
   - 
   - Ground
-  - 
-  - 
+  - Enemy
+  - EnemyHead
   - 
   - 
   - 

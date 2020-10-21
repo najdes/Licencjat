@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,7 +15,9 @@ public class PlayerUI : MonoBehaviour
     public GameObject weaponInfo;
     public GameObject currentAmmoShow;
     public GameObject magCapacityShow;
-    public GameObject holdAmmoShow;
+    public GameObject pistolHoldAmmo;
+    public GameObject rifleHoldAmmo;
+    public GameObject shotgunHoldAmmo;
     public int currMeds;
 
 
@@ -27,28 +30,16 @@ public class PlayerUI : MonoBehaviour
     {
         holdRifleAmmo = GunSwitch.currentRifleAmmo;
         holdShotgunAmmo = GunSwitch.currentShotgunAmmo;
-        string weaponTag = currentWeaponInfo();
-        //Debug.Log(weaponTag);
-        //Debug.Log(currAmmo);
-        //Debug.Log(magCapacity);
-        if (weaponTag == "Pistol")
-        {
-            holdAmmoShow.GetComponent<Text>().text = "999";
-        }
-        else if( weaponTag == "Ak" || weaponTag == "M4")
-        {
-            holdAmmoShow.GetComponent<Text>().text = holdRifleAmmo.ToString();    
-        }
-        else
-        {
-            holdAmmoShow.GetComponent<Text>().text = holdShotgunAmmo.ToString();
-        }
+        currentWeaponInfo();
+        pistolHoldAmmo.GetComponent<TextMeshProUGUI>().SetText("\u221E");
+        rifleHoldAmmo.GetComponent<TextMeshProUGUI>().SetText("{0}", holdRifleAmmo);    
+        shotgunHoldAmmo.GetComponent<TextMeshProUGUI>().SetText("{0}", holdShotgunAmmo);
 
-        currentAmmoShow.GetComponent<Text>().text = currAmmo.ToString();
-        magCapacityShow.GetComponent<Text>().text = magCapacity.ToString();
+        currentAmmoShow.GetComponent<TextMeshProUGUI>().SetText("{0}", currAmmo);
+        magCapacityShow.GetComponent<TextMeshProUGUI>().SetText("{0}",magCapacity);
 
         currMeds = ItemPick.currMeds;
-        medsDisplay.GetComponent<Text>().text = "" + currMeds;
+        medsDisplay.GetComponent<TextMeshProUGUI>().SetText("{0}",currMeds);
     }
     string currentWeaponInfo()
     {

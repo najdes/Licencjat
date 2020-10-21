@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class Gun : MonoBehaviour
 {
@@ -14,51 +15,58 @@ public class Gun : MonoBehaviour
     public int currentAmmunition;
     public float relaodTime = 0.1f;
     public float headMulti = 2f;
-    public float range = 2f;
+    public float range = 200f;
+    public float upRecoil = 2f;
+    public float sideNegativeRecoil = -1f;
+    public float sidePositiveRecoil = 1f;
     public int HoldAmmo { set; get; }
     public bool IsEnable { set; get; } = false;
     public bool isReloading = false;
     public Camera fpsCam;
-    public GameObject bloodSplash;
-    public GameObject currAmmo;
-    public GameObject bulletGO;
-    public GameObject pelletGO;
-    public GameObject magAmmoGO;
-    public GameObject holdAmmoGO;
+    public GameObject impactGO;
     public Animator animator;
     public ParticleSystem muzzleFlash;
 
+    public AudioSource shotSound;
+    public AudioSource reloadSound;
+    public AudioSource finishingReload;
+
     float nextTimeToFire = 0f;
-    private void Start() {
-        if (transform.parent.CompareTag("Pistol"))
+
+    private void Start()
+    {
+        if (IsPistol())
             IsEnable = true;
-        
         currentAmmunition = magCapacity;
 
         AmmoUptade();
     }
     void Update()
     {
+        if (PauseMenu.GameIsPaused)
+            return;
+
+        SetAnimation();
         //ShowAmmo();
         if (isReloading)
             return;
-        if (transform.parent.CompareTag("Ak") || transform.parent.CompareTag("M4"))
+        if (IsAk() || IsM4())
         {
-            if ((currentAmmunition <= 0 || Input.GetKeyDown("r")) && GunSwitch.currentRifleAmmo > 0 && currentAmmunition<magCapacity)
+            if ((currentAmmunition <= 0 || Input.GetKeyDown("r")) && GunSwitch.currentRifleAmmo > 0 && currentAmmunition < magCapacity)
             {
                 StartCoroutine(Reload());
                 return;
             }
         }
-        else if (transform.parent.CompareTag("Shotgun"))
+        else if (IsShotgun())
         {
-            if ((currentAmmunition <= 0 || Input.GetKeyDown("r")) && GunSwitch.currentShotgunAmmo > 0 &&currentAmmunition < magCapacity)
+            if ((currentAmmunition <= 0 || Input.GetKeyDown("r")) && GunSwitch.currentShotgunAmmo > 0 && currentAmmunition < magCapacity)
             {
                 StartCoroutine(Reload());
                 return;
             }
         }
-        else if (transform.parent.CompareTag("Pistol") && currentAmmunition < magCapacity)
+        else if (IsPistol() && currentAmmunition < magCapacity)
         {
             if ((currentAmmunition <= 0 || Input.GetKeyDown("r")))
             {
@@ -67,7 +75,7 @@ public class Gun : MonoBehaviour
             }
         }
 
-        if (transform.parent.CompareTag("Ak") || transform.parent.CompareTag("M4"))
+        if (IsAk() || IsM4())
         {
             if (Input.GetButton("Fire1") && Time.time >= nextTimeToFire && currentAmmunition > 0)
             {
@@ -91,86 +99,98 @@ public class Gun : MonoBehaviour
     private void Shoot()
     {
         currentAmmunition--;
+        shotSound.Play();
         Vector3 middle = fpsCam.transform.forward;
-        if (transform.parent.CompareTag("Shotgun"))
+        if (IsShotgun())
         {
-            
+
             MakeBloomShoot(middle);
         }
         else
         {
-            MakeSingleBullet(middle,0f,0f,0f,bulletGO,damage);
-        }    
+            MakeSingleBullet(middle, damage);
+        }
+
+        fpsCam.GetComponent<MouseLook>().AddRecoil(upRecoil, Random.Range(sideNegativeRecoil,sidePositiveRecoil),sideNegativeRecoil,sidePositiveRecoil);
     }
 
 
-    IEnumerator Reload(){
-        animator.SetBool("isReloading", true);
+    IEnumerator Reload()
+    {
+        reloadSound.Play();
+
+        SetReloadAnim(true);
         isReloading = true;
-        yield return new WaitForSeconds(relaodTime - .25f);
-        animator.SetBool("isReloading", false);
-        yield return new WaitForSeconds(.25f);
-        if (!transform.parent.CompareTag("Pistol"))
+        yield return new WaitForSeconds(relaodTime - .5f);
+        SetReloadAnim(false);
+        yield return new WaitForSeconds(.5f);
+        if (IsShotgun())
+            finishingReload.Play();
+        if (!IsPistol())
         {
-            if (transform.parent.CompareTag("Ak") || transform.parent.CompareTag("M4"))
+            if (IsAk() || IsM4())
             {
+                int tmp=magCapacity-currentAmmunition;
                 int _magAmmo = currentAmmunition;
                 int _holdAmmo = GunSwitch.currentRifleAmmo;
-
-                if (_magAmmo > 0)
+                if (_holdAmmo < 0)
                 {
-                    _holdAmmo -= (magCapacity - _magAmmo);
-
+                    _holdAmmo = 0;
                 }
-                else
-                {
-                    _holdAmmo -= magCapacity;
-                }
-
                 if (GunSwitch.currentRifleAmmo >= magCapacity)
                 {
                     _magAmmo = magCapacity;
+                    _holdAmmo -= (magCapacity - currentAmmunition);
                 }
                 else
                 {
-                    _magAmmo = GunSwitch.currentRifleAmmo;
+                    if(_holdAmmo - tmp > 0)
+                    {
+                        _magAmmo += tmp;
+                        _holdAmmo -= tmp;
+                    }
+                    else
+                    {
+                        _magAmmo += _holdAmmo;
+                        _holdAmmo = 0;
+                    }
+                    
                 }
-                if (_holdAmmo >= 0)
-                    GunSwitch.currentRifleAmmo = _holdAmmo;
-                else
-                    GunSwitch.currentRifleAmmo = 0;
+                GunSwitch.currentRifleAmmo = _holdAmmo;
                 currentAmmunition = _magAmmo;
             }
-            else if(transform.parent.CompareTag("Shotgun"))
+            else if (IsShotgun())
             {
+                int tmp = magCapacity - currentAmmunition;
                 int _magAmmo = currentAmmunition;
                 int _holdAmmo = GunSwitch.currentShotgunAmmo;
-
-                if(_magAmmo > 0)
+                if (_holdAmmo < 0)
                 {
-                    _holdAmmo -= (magCapacity - _magAmmo);
-
+                    _holdAmmo = 0;
                 }
-                else
-                {
-                    _holdAmmo -= magCapacity;
-                }
-
                 if (GunSwitch.currentShotgunAmmo >= magCapacity)
                 {
                     _magAmmo = magCapacity;
+                    _holdAmmo -= (magCapacity - currentAmmunition);
                 }
                 else
                 {
-                    _magAmmo = GunSwitch.currentShotgunAmmo;
+                    if (_holdAmmo - tmp > 0)
+                    {
+                        _magAmmo += tmp;
+                        _holdAmmo -= tmp;
+                    }
+                    else
+                    {
+                        _magAmmo += _holdAmmo;
+                        _holdAmmo = 0;
+                    }
+
                 }
-                if (_holdAmmo >= 0)
-                    GunSwitch.currentShotgunAmmo = _holdAmmo;
-                else
-                    GunSwitch.currentShotgunAmmo = 0;
+                GunSwitch.currentShotgunAmmo = _holdAmmo;
                 currentAmmunition = _magAmmo;
             }
-           
+
             isReloading = false;
         }
         else
@@ -178,60 +198,150 @@ public class Gun : MonoBehaviour
             currentAmmunition = magCapacity;
             isReloading = false;
         }
-            
+
+        
     }
-    void ShowAmmo()
+    void MakeSingleBullet(Vector3 shootLine, float singleDmg)
     {
-        currAmmo.GetComponent<Text>().text = currentAmmunition.ToString();
-        magAmmoGO.GetComponent<Text>().text = magCapacity.ToString();
-        if(transform.parent.CompareTag("Shotgun"))
-            holdAmmoGO.GetComponent<Text>().text = GunSwitch.currentShotgunAmmo.ToString();
-        else if (transform.parent.CompareTag("Pistol"))
-            holdAmmoGO.GetComponent<Text>().text = HoldAmmo.ToString();
-        else
-            holdAmmoGO.GetComponent<Text>().text = GunSwitch.currentRifleAmmo.ToString();
+        RaycastHit hit;
+        if (Physics.Raycast(fpsCam.transform.position, shootLine, out hit, range))
+        {
+            Zombie zombie = hit.collider.transform.root.GetComponent<Zombie>();
+            if (zombie != null)
+            {
+                if (hit.collider.CompareTag("EnemyHead"))
+                {
+                    zombie.TakeDamage(singleDmg * headMulti);
+                }
 
-    }
+                else if (hit.collider.CompareTag("Enemy"))
+                {
+                    zombie.TakeDamage(singleDmg);
+                }
+            }
+        }
+        if (Physics.Raycast(fpsCam.transform.position, shootLine, out hit, range))
+        {
+            Titan titan = hit.collider.transform.root.GetComponent<Titan>();
+            if (titan != null)
+            {
+                if (hit.collider.CompareTag("TitanHead"))
+                {
+                    titan.TakeDamage(singleDmg * headMulti);
+                }
 
-    void MakeSingleBullet(Vector3 shootLine, float x, float y, float z, GameObject projectile,float singleDmg)
-    {
-        GameObject bullet = Instantiate(projectile);
-        Rigidbody bulletRigidBody = bullet.GetComponent<Rigidbody>();
-        BulletScript bulletScript = bullet.GetComponent<BulletScript>();
-
-        bulletScript.setValues(singleDmg, life, headMulti,range);
-        bullet.transform.position = transform.position;
-        float angle = Vector3.Angle(transform.position, shootLine);
-        Debug.Log(angle);
-        bullet.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
-        Vector3 rotatedShot = Quaternion.Euler(x, y, z) * shootLine;
-        bulletRigidBody.velocity = rotatedShot * bulletSpeed;
+                else if (hit.collider.CompareTag("Titan"))
+                {
+                    titan.TakeDamage(singleDmg);
+                }
+                else if (hit.collider.CompareTag("TitanArmor"))
+                {
+                    titan.TakeDamage(singleDmg / 2);
+                }
+            }
+        }
     }
     private void MakeBloomShoot(Vector3 middle)
     {
-        float fixedDmg = damage / 13f;
-        MakeSingleBullet(middle, 0, -7, 7, pelletGO, fixedDmg);//lewa \/
-        MakeSingleBullet(middle, 0,  -7, 2, pelletGO, fixedDmg);
-        MakeSingleBullet(middle, 0, -7, -2, pelletGO, fixedDmg);
-        MakeSingleBullet(middle, 0, -7, 7, pelletGO, fixedDmg);
-        MakeSingleBullet(middle, 0, -5, -5, pelletGO, fixedDmg);
-        MakeSingleBullet(middle, 0, -5, 5, pelletGO, fixedDmg);
-        MakeSingleBullet(middle, 0, 0, 0, pelletGO, fixedDmg);//srodkowy strzal
-        MakeSingleBullet(middle, 0, 5, 5, pelletGO, fixedDmg);
-        MakeSingleBullet(middle, 0, 5, -5, pelletGO, fixedDmg);
-        MakeSingleBullet(middle, 0, 7, 7, pelletGO, fixedDmg);
-        MakeSingleBullet(middle, 0, 7, -2, pelletGO, fixedDmg);
-        MakeSingleBullet(middle, 0, 7, 2, pelletGO, fixedDmg);
-        MakeSingleBullet(middle, 0, 7, 7, pelletGO, fixedDmg);//prawa /\
+        float variance = 1.0f;
+        float distance = 10.0f;
+        float fixedDmg = damage / 18f;
+        for (int i = 0; i < 30; i++)
+        {
+            Vector3 offset = transform.up * Random.Range(0.0f, variance);
+            offset = Quaternion.AngleAxis(Random.Range(0.0f, 360.0f), middle) * offset;
+            Vector3 hit = middle * distance + offset;
+            MakeSingleBullet(hit, fixedDmg);
+        }
     }
 
     void AmmoUptade()
     {
-        if (transform.parent.CompareTag("Shotgun"))
+        if (IsShotgun())
             HoldAmmo = GunSwitch.currentShotgunAmmo;
-        else if (transform.parent.CompareTag("Pistol"))
+        else if (IsPistol())
             HoldAmmo = 999;
         else
             HoldAmmo = GunSwitch.currentRifleAmmo;
+    }
+    void SetAnimation()
+    {
+        if (IsPistol())
+        {
+            animator.SetBool("isPistol", true);
+            animator.SetBool("isAk", false);
+            animator.SetBool("isM4", false);
+            animator.SetBool("isShotgun", false);
+            animator.SetBool("noWeapon", false);
+        }
+        if (IsShotgun())
+        {
+            animator.SetBool("isPistol", false);
+            animator.SetBool("isAk", false);
+            animator.SetBool("isM4", false);
+            animator.SetBool("isShotgun", true);
+            animator.SetBool("noWeapon", false);
+        }
+        if (IsAk())
+        {
+            animator.SetBool("isPistol", false);
+            animator.SetBool("isAk", true);
+            animator.SetBool("isM4", false);
+            animator.SetBool("isShotgun", false);
+            animator.SetBool("noWeapon", false);
+        }
+        if (IsM4())
+        {
+            animator.SetBool("isPistol", false);
+            animator.SetBool("isAk", false);
+            animator.SetBool("isM4", true);
+            animator.SetBool("isShotgun", false);
+            animator.SetBool("noWeapon", false);
+        }
+    }
+    void SetReloadAnim(bool reload)
+    {
+        if(IsPistol())
+        {
+            animator.SetBool("isReloadingPistol", reload);
+        }
+        if (IsShotgun())
+        {
+            animator.SetBool("isReloadingShotgun", reload);
+        }
+        if (IsAk())
+        {
+            animator.SetBool("isReloadingAk", reload);
+        }
+        if (IsM4())
+        {
+            animator.SetBool("isReloadingM4", reload);
+            animator.SetBool("isM4", !reload);
+        }
+    }
+
+    bool IsPistol()
+    {
+        if (transform.CompareTag("Pistol"))
+            return true;
+        return false;
+    }
+    bool IsAk()
+    {
+        if (transform.CompareTag("Ak"))
+            return true;
+        return false;
+    }
+    bool IsM4()
+    {
+        if (transform.CompareTag("M4"))
+            return true;
+        return false;
+    }
+    bool IsShotgun()
+    {
+        if (transform.CompareTag("Shotgun"))
+            return true;
+        return false;
     }
 }

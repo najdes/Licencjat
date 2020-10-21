@@ -3,18 +3,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class ItemPickUp : MonoBehaviour
 {
     public Camera fpsCam;
     public int range = 20;
     public PlayerUI playerUI;
+    public GameObject pickText;
     public GameObject weaponHolder;
     public int currMeds;
     public int currRifleAmmo;
     public int currShotgunAmmo;
     public int rifleAmmoAdd = 40;
     public int shotgunAmmoAdd = 8;
+    public GameObject [] weaponIcon;
+
+    string pickUpText = "";
     void Update()
     {
         pickUpItem();
@@ -26,15 +32,18 @@ public class ItemPickUp : MonoBehaviour
         RaycastHit target;
         if (Input.GetButton("PickUp"))
         {
-            if(Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out target, range))
+            if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out target, range))
             {
-                foreach(Transform weapon in weaponHolder.transform)
+                int i = 0;
+                foreach (Transform weapon in weaponHolder.transform)
                 {
                     if (target.collider.CompareTag(weapon.tag))
                     {
+                        SetWeaponIcon(i);
                         weapon.GetComponentInChildren<Gun>().IsEnable = true;
                         Destroy(target.transform.gameObject);
                     }
+                    i++;
                 }
             }
         }
@@ -60,9 +69,10 @@ public class ItemPickUp : MonoBehaviour
                 }
                 if (target.collider.CompareTag("Ammobag"))
                 {
+
                     if (currRifleAmmo < GunSwitch.rifleAmmo)
                     {
-                        if(currRifleAmmo + rifleAmmoAdd > GunSwitch.rifleAmmo)
+                        if (currRifleAmmo + rifleAmmoAdd > GunSwitch.rifleAmmo)
                         {
                             GunSwitch.currentRifleAmmo = GunSwitch.rifleAmmo;
                         }
@@ -84,8 +94,38 @@ public class ItemPickUp : MonoBehaviour
                     }
                     Destroy(target.transform.gameObject);
                 }
-
             }
         }
     }
+
+    void SetWeaponIcon(int i)
+    {
+        switch (i)
+        {
+            case 0:
+                LoopElements(0);
+                break;
+            case 1:
+                LoopElements(1);
+                break;
+            case 2:
+                LoopElements(2);
+                break;
+            case 3:
+                LoopElements(3);
+                break;
+        }
+    }
+
+    void LoopElements(int index)
+    {
+        for (int i = 0; i < weaponIcon.Length; i++)
+        {
+            if (i == index)
+            {
+                weaponIcon[i].SetActive(true);
+            }
+        }
+    }
+
 }

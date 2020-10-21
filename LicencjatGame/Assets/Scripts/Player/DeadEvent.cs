@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class DeadEvent : MonoBehaviour
 {
+    public PauseMenu pause;
     GameObject player;
     float playerHealth;
     private void Start() {
@@ -18,7 +19,7 @@ public class DeadEvent : MonoBehaviour
         if(playerHealth<=0f){           
             Scene scene = SceneManager.GetActiveScene();
             player.GetComponent<PlayerHealth>().PlayerHp = 100f;
-            SceneManager.LoadScene(scene.name);
+            pause.Death();
         }
     }
 }

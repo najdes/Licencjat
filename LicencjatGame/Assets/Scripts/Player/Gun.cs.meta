@@ -3,7 +3,17 @@ guid: 1488eff53b35013409116196aaae0950
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - fpsCam: {instanceID: 0}
+  - bloodSplash: {fileID: 6400638489024687976, guid: b9a0a7835b01ab04dbe74bfbd3e30ff2,
+      type: 3}
+  - currAmmo: {instanceID: 0}
+  - bulletGO: {instanceID: 0}
+  - pelletGO: {instanceID: 0}
+  - magAmmoGO: {instanceID: 0}
+  - holdAmmoGO: {instanceID: 0}
+  - animator: {instanceID: 0}
+  - muzzleFlash: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
