@@ -8,6 +8,7 @@ public class TitanAI : Titan
 {
     public GameObject playerDestination;
     public GameObject slamZone;
+    public Titan titan;
     Animator animator;
     Vector3 playerPos;
     Vector3 titanPos;
@@ -22,35 +23,34 @@ public class TitanAI : Titan
     float shouting = 79f;
     float specialAttack = 0f;
     private void Start()
-    {
+    { 
         playerDestination = GameObject.Find("PlayerModel");
         animator = GetComponent<Animator>();
         meshAgent = GetComponent<NavMeshAgent>();
         meshAgent.speed = speed;
     }
     private void Update()
-    {
-        
+    {       
         specialAttack += Time.deltaTime;
         playerPos = playerDestination.transform.position;
         titanPos = meshAgent.transform.position;
         distance = titanPos - playerPos;
         meshAgent.SetDestination(playerPos);
 
-        if (isShouting || isTakingDmg || isAttacking )
+        if (isShouting || isTakingDmg || isAttacking)
             return;
 
         slamZone.SetActive(false);
         shouting += Time.deltaTime;
 
-        if(isAlive && distance.magnitude > 30f && !isTriggered)
+        if(titan.IsAlive() && distance.magnitude > 30f && !isTriggered)
         {
             meshAgent.speed = speed;
             animator.SetBool("isWalking", true);
             if (TookDamage()) StartCoroutine(TakeDmg());
             MakeShout();
         }
-        else if(isAlive && distance.magnitude <= 30f || isTriggered)
+        else if(titan.IsAlive() && distance.magnitude <= 30f || isTriggered)
         {
 
             meshAgent.speed = 8;
@@ -90,7 +90,7 @@ public class TitanAI : Titan
         }
         else
         {
-            meshAgent.isStopped = true;
+            meshAgent.isStopped = true;         
         } 
        
     }

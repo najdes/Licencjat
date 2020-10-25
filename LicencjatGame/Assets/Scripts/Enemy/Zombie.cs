@@ -25,7 +25,8 @@ public class Zombie : MonoBehaviour
     private void Die()
     {
         gameObject.GetComponent<Animator>().Play("Z_FallingForward");
-        titanSpawner.deadZombieCounter++;
+        if(!isDead)
+            titanSpawner.deadZombieCounter++;
         titanSpawner.ChechNumber();
         isDead = true;
     }

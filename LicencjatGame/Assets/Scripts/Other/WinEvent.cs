@@ -13,8 +13,7 @@ public class WinEvent : MonoBehaviour
         if (titanSpawner.ChechNumber())
         {
            Titan titan = GameObject.FindGameObjectWithTag("Titan").GetComponent<Titan>();
-            float titanHP = titan.health;
-            if(titanHP<=0)
+            if(!titan.IsAlive())
                 pause.Win();
         }
     }

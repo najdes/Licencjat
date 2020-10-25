@@ -18,7 +18,7 @@ public class PlayerUI : MonoBehaviour
     public GameObject pistolHoldAmmo;
     public GameObject rifleHoldAmmo;
     public GameObject shotgunHoldAmmo;
-    public int currMeds;
+    public static int currMeds;
 
 
     int currAmmo;
@@ -26,6 +26,10 @@ public class PlayerUI : MonoBehaviour
     int holdShotgunAmmo;
     int holdRifleAmmo;
 
+    private void Start()
+    {
+        currMeds = 0;
+    }
     void Update()
     {
         holdRifleAmmo = GunSwitch.currentRifleAmmo;
@@ -34,12 +38,10 @@ public class PlayerUI : MonoBehaviour
         pistolHoldAmmo.GetComponent<TextMeshProUGUI>().SetText("\u221E");
         rifleHoldAmmo.GetComponent<TextMeshProUGUI>().SetText("{0}", holdRifleAmmo);    
         shotgunHoldAmmo.GetComponent<TextMeshProUGUI>().SetText("{0}", holdShotgunAmmo);
-
         currentAmmoShow.GetComponent<TextMeshProUGUI>().SetText("{0}", currAmmo);
         magCapacityShow.GetComponent<TextMeshProUGUI>().SetText("{0}",magCapacity);
+        medsDisplay.GetComponent<TextMeshProUGUI>().SetText("{0}", currMeds);
 
-        currMeds = ItemPick.currMeds;
-        medsDisplay.GetComponent<TextMeshProUGUI>().SetText("{0}",currMeds);
     }
     string currentWeaponInfo()
     {

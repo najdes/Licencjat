@@ -1464,9 +1464,9 @@ MonoBehaviour:
   slamDamage: 25
   speed: 5
   health: 1500
-  isAlive: 1
   playerDestination: {fileID: 0}
   slamZone: {fileID: 9218812683249592778}
+  titan: {fileID: 8543139782201296422}
 --- !u!114 &8543139782201296422
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1482,8 +1482,7 @@ MonoBehaviour:
   damage: 10
   slamDamage: 25
   speed: 5
-  health: 1
-  isAlive: 1
+  health: 1500
 --- !u!195 &8543139782201296423
 NavMeshAgent:
   m_ObjectHideFlags: 0

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,6 +11,7 @@ public class Healing : MonoBehaviour
     public float healTime = 2f;
     private float healStartTime;
     public PlayerHealth playerHp;
+    public PlayerUI meds;
     public Slider slider;
     private GameObject sliderGo;
     public bool HealInProgress { get; set; }
@@ -22,7 +24,9 @@ public class Healing : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButtonDown("Heal") && playerHp.PlayerHp<100f)
+        
+        
+        if (Input.GetButtonDown("Heal") && playerHp.PlayerHp<100f && PlayerUI.currMeds>0)
         {
             if (!HealInProgress) 
             {
@@ -52,9 +56,10 @@ public class Healing : MonoBehaviour
                 playerHp.PlayerHp += 30f;
             else
                 playerHp.PlayerHp = playerHp.PlayerHp + (100f - playerHp.PlayerHp);
-            print("Cast was suucces");
+            PlayerUI.currMeds -= 1;
             sliderGo.SetActive(false);
         }
+        Debug.Log(healSuccess);
         slider.value = 0;
         HealInProgress = false;
     }

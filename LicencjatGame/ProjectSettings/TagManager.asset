@@ -20,6 +20,7 @@ TagManager:
   - TitanArmor
   - TitanPunch
   - TitanSlam
+  - Menu
   layers:
   - Default
   - TransparentFX

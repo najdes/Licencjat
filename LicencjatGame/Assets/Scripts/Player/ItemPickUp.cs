@@ -20,7 +20,6 @@ public class ItemPickUp : MonoBehaviour
     public int shotgunAmmoAdd = 8;
     public GameObject [] weaponIcon;
 
-    string pickUpText = "";
     void Update()
     {
         pickUpItem();
@@ -51,7 +50,7 @@ public class ItemPickUp : MonoBehaviour
 
     void pickUpItem()
     {
-        currMeds = playerUI.currMeds;
+        currMeds = PlayerUI.currMeds;
         currRifleAmmo = GunSwitch.currentRifleAmmo;
         currShotgunAmmo = GunSwitch.currentShotgunAmmo;
         RaycastHit target;
@@ -63,7 +62,7 @@ public class ItemPickUp : MonoBehaviour
                 {
                     if (currMeds < playerUI.maxMeds)
                     {
-                        currMeds++;
+                        PlayerUI.currMeds += 1;
                         Destroy(target.transform.gameObject);
                     }
                 }
