@@ -47,7 +47,6 @@ public class Gun : MonoBehaviour
             return;
 
         SetAnimation();
-        //ShowAmmo();
         if (isReloading)
             return;
         if (IsAk() || IsM4())

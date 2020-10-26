@@ -8,7 +8,6 @@ public class PlayerMovement : MonoBehaviour
     public float speed = 4f;
     public float gravity = -20f;
     public float jumpHeight = 2.5f;
-    public float WaterHeight = 15.5f;
     public float stamina = 100f;
 
     public Transform groundCheck;
@@ -48,7 +47,6 @@ public class PlayerMovement : MonoBehaviour
         }
 
         Vector3 move = transform.right * x + transform.forward*z;
-        //Debug.Log(z);
         controller.Move(move * speed * Time.deltaTime);
         if (move == Vector3.zero)
         {
